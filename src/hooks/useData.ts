@@ -1,12 +1,13 @@
 import  { useEffect, useState } from 'react'
 import apiClient from '../services/api-client';
+import { AxiosRequestConfig } from 'axios';
 
 
 interface FetchGenreData<T>{
     count:number,
     results:T[]
 }
-const useGenre = <T>(endpoint:string) => {
+const useGenre = <T>(endpoint:string,requestConfig?:AxiosRequestConfig,deps?:any[]) => {
 
 
   const [data, setData] = useState<T[]>();
@@ -17,7 +18,7 @@ const useGenre = <T>(endpoint:string) => {
   useEffect(() => {
     setIsLoading(true);
     apiClient
-      .get<FetchGenreData<T>>(endpoint)
+      .get<FetchGenreData<T>>(endpoint,{...requestConfig})
       .then((res) => {
         setData(res.data.results);
         setIsLoading(false);
@@ -28,7 +29,7 @@ const useGenre = <T>(endpoint:string) => {
         setIsLoading(false);
       });
       
-  }, []);
+  },deps? [...deps]:[]);
   return {data,error,isLoading};
 }
 
